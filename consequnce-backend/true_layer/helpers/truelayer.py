@@ -3,14 +3,16 @@ import uuid
 import urllib
 import time
 import requests
-from datetime import datetime
 import jwt
 import requests
 import humanize
 
+from datetime import datetime
 
 from django.conf import settings
+
 from true_layer.helpers.validators import validate_dtformat
+from true_layer.models import Account, AccountTransaction, Card
 
 
 class TrueLayerAPI:
@@ -132,7 +134,65 @@ class TrueLayerDataAPI:
 
 		super().__init__()
 
-	def get_accounts(self):
+	def __save_account(sefl, user, result):
+		payload = {
+			"account_id": result['account_id'],
+			"account_type": result['account_type'],
+			"display_name": result['display_name'],
+			"currency": result['currency'],
+			"account_swift_bic": result['account_number']['swift_bic'],
+			"account_number": result['account_number']['number'],
+			"account_sort_code": result['account_number']['sort_code'],
+			"provider_display_name": result['provider']['display_name'],
+			"provider_id": result['provider']['provider_id'],
+			"provider_logo_uri": result['provider']['logo_uri'],
+		}
+		account = Account.objects.filter(account_id=payload['account_id'], user_id=user)
+		if account:
+			account.update(**payload)
+		else:
+			payload['user_id'] = user
+			account, created = Account.objects.get_or_create(**payload)
+		return account
+
+	def __save_card_detail(self, user, result):
+		payload = {
+			"account_id": result['account_id'],
+			"card_network": result['card_network'],
+			"card_type": result['card_type'],
+			"currency": result['currency'],
+			"display_name": result['display_name'],
+			"partial_card_number": result['partial_card_number'],
+			"name_on_card": result['name_on_card'],
+			"provider_display_name": result['provider']['display_name'],
+			"provider_id": result['provider']['provider_id'],
+			"provider_logo_uri": result['provider']['logo_uri'],
+		}
+		payload['user_id'] = user
+		card, created = Card.objects.get_or_create(**payload)
+		return card
+
+	def __save_account_transaction(self, account_id, result):
+		account = Account.objects.get(account_id=account_id)
+
+		payload = {
+			"description": result['description'],
+			"transaction_type": result['transaction_type'],
+			"transaction_category": result['transaction_category'],
+			"transaction_classification": result['transaction_classification'],
+			"amount": result['amount'],
+			"currency": result['currency'],
+			"transaction_id": result['transaction_id'],
+			"provider_transaction_id": result['provider_transaction_id'] if 'provider_transaction_id' in result else "",
+			"normalised_provider_transaction_id": result['normalised_provider_transaction_id'] if 'normalised_provider_transaction_id' in result else "",
+			"running_balance": result['running_balance']['amount']
+		}
+
+		payload['account_id'] = account.id
+		account_transaction, created = AccountTransaction.objects.get_or_create(**payload)
+		return account_transaction
+
+	def get_accounts(self, user):
 		url = f"{self.data_api_uri}/accounts"
 
 		r = requests.get(url, headers=self.headers)
@@ -141,6 +201,8 @@ class TrueLayerDataAPI:
 
 		if body["status"] == "Succeeded":
 			results = body["results"]
+			for result in results:
+				self.__save_account(user, result)
 			return results
 		else:
 			return []
@@ -167,7 +229,7 @@ class TrueLayerDataAPI:
 		else:
 			return []
 
-	def get_account_transactions(self, account_id, txn_from=None, txn_to=None):
+	def get_account_transactions(self, user, account_id, txn_from=None, txn_to=None):
 		"""
 		:param txn_from: YYYY-MM-DD
 		:param txn_to: YYYY-MM-DD
@@ -184,11 +246,13 @@ class TrueLayerDataAPI:
 		body = r.json()
 		if body["status"] == "Succeeded":
 			results = body["results"]
+			for result in results:
+				self.__save_account_transaction(account_id, result)
 			return results
 		else:
 			return []
 
-	def get_cards(self):
+	def get_cards(self, user):
 		url = f"{self.data_api_uri}/cards"
 
 		r = requests.get(url, headers=self.headers)
@@ -196,10 +260,14 @@ class TrueLayerDataAPI:
 		body = r.json()
 		if body["status"] == "Succeeded":
 			results = body["results"]
+			for result in results:
+				self.__save_card_detail(user, result)
 			return results
 		else:
 			return []
 
+	def __save_card_transaction(self, card, result):
+		pass
 
 	def get_card_transactions(self, card_id):
 		url = f"{self.data_api_uri}/cards/{card_id}/transactions"
@@ -209,6 +277,8 @@ class TrueLayerDataAPI:
 		body = r.json()
 		if body["status"] == "Succeeded":
 			results = body["results"]
+			for result in results:
+				pass
 			return results
 		else:
 			return []

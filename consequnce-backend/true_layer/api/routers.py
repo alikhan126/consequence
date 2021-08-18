@@ -24,5 +24,5 @@ urlpatterns = [
     path('balance/', TrueLayerBalance.as_view(), name='truelayer_balance'),
     path('transactions/', TrueLayerTransactions.as_view(), name='truelayer_transactions'),
     path('cards/', TrueLayerCards.as_view(), name='truelayer_cards'),
-    path('card/transactions/', TrueLayerTransactions.as_view(), name='truelayer_card_transactions'),
+    path('card/transactions/', TrueLayerCardTransactions.as_view(), name='truelayer_card_transactions'),
 ]
