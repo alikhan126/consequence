@@ -266,9 +266,6 @@ class TrueLayerDataAPI:
 		else:
 			return []
 
-	def __save_card_transaction(self, card, result):
-		pass
-
 	def get_card_transactions(self, card_id):
 		url = f"{self.data_api_uri}/cards/{card_id}/transactions"
 
@@ -277,8 +274,6 @@ class TrueLayerDataAPI:
 		body = r.json()
 		if body["status"] == "Succeeded":
 			results = body["results"]
-			for result in results:
-				pass
 			return results
 		else:
 			return []

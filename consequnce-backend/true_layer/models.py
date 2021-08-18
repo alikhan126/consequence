@@ -43,7 +43,7 @@ class AccountTransaction(BaseTimeStampedModel):
     account = models.ForeignKey(Account, related_name="transactions", on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.account_id}: {self.transaction_id}'
+        return f'{self.account}: Transaction: {self.transaction_id}'
 
 
 class Card(BaseTimeStampedModel):

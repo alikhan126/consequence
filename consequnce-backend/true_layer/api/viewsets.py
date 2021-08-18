@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from true_layer.helpers.truelayer import TrueLayerAPI, TrueLayerDataAPI
-from true_layer.models import TrueLayerAuth
+from true_layer.models import TrueLayerAuth, Account
 from user.models import User
 
 
@@ -86,10 +86,18 @@ class TrueLayerTransactions(APIView):
 		txn_from = request.query_params.get("from", None)
 		txn_to = request.query_params.get("to", None)
 
-		token = TrueLayerAuth.objects.get(user__id=request.user.id)
-		result = TrueLayerDataAPI(token=token.access_token).get_account_transactions(
-			request.user.id, account_id, txn_from, txn_to
-		)
+		if account_id:
+			token = TrueLayerAuth.objects.get(user__id=request.user.id)
+			result = TrueLayerDataAPI(token=token.access_token).get_account_transactions(
+				request.user.id, account_id, txn_from, txn_to
+			)
+		else:
+			token = TrueLayerAuth.objects.get(user__id=request.user.id)
+			accounts = Account.objects.filter(user=request.user)
+			for account in accounts:
+				result = TrueLayerDataAPI(token=token.access_token).get_account_transactions(
+					request.user.id, account.account_id, txn_from, txn_to
+				)
 		return Response(result, status=status.HTTP_200_OK)
 
 
