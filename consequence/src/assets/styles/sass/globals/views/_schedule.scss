@@ -1,0 +1,262 @@
+.without-date-header {
+    .e-table-container {
+        .e-outer-table {
+            .e-left-indent-wrap {
+                .e-schedule-table tbody .e-header-cells {
+                    display: none !important;
+                }
+            }
+        }
+    }
+    .e-date-header-container{
+        .e-date-header-wrap {
+            .e-schedule-table tbody .e-header-cells {
+                display: none !important;
+            }
+        }
+    }
+}
+.schedule-container {
+        .fullscreen {
+            .e-table-container {
+                height: 100%;
+                .e-outer-table {
+                    tbody:first-of-type tr {
+                        height: 0;
+                    }
+                    height: 100%;
+                    .e-time-cells-wrap, .e-content-wrap {
+                        height: calc(100vh - 170px) !important;
+                    }
+                    .e-left-indent-wrap, 
+                    .e-date-header-container, 
+                    .e-date-header-wrap,
+                    .e-schedule-table {
+                            height: 100%;
+                    }
+                    .e-left-indent-wrap {
+                        .e-schedule-table tbody .e-header-cells {
+                            display: none !important;
+                        }
+                    }
+                }
+            }
+        }
+        .e-schedule {
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.01);
+            .e-schedule-toolbar {
+                .e-toolbar-items {
+                    background-color: #ffffff;
+                    .e-toolbar-left {
+                        left: 43%;
+                        z-index: 99;
+                    }
+                    .e-toolbar-right {
+                        width: 63%;
+                        .e-today {
+                            margin-right: 35%;
+                        }
+                        .e-separator {
+                            display: none;
+                        }
+                        .full-screen-view-icon {
+                            float: right;
+                        }
+                    }
+                }
+                .e-tbar-btn {
+                    background-color: #ffffff;
+                    &:hover {
+                        background-color: #e5f4f8;
+                    }
+                    &:focus {
+                        background-color: #e5f4f8;
+                    }
+                }
+                .e-active-view {
+                    .e-tbar-btn-text {
+                        color: #6cdcd4;
+                    }
+                    .e-icons {
+                        color: #6cdcd4;
+                    }
+                }
+                box-shadow: none;
+                border-bottom: 1px solid #e0e0e0;
+                margin: 0;
+            }
+            .e-vertical-view {
+                .e-header-cells.e-current-day {
+                    color: #6cdcd4;
+                }
+                .e-current-time {
+                    color: #6cdcd4;
+                }
+                .e-current-timeline {
+                    border-color: #6cdcd4;
+                }
+                .e-work-cells {
+                    background-color: #fff;
+                }
+            }
+            .e-table-container {
+                .e-table-wrap {
+                    .e-outer-table tbody .e-resource-cells {
+                        text-align: center !important;
+                        font-weight: 500;
+                        border-bottom: 0;
+                    }
+                }
+            }
+        }
+        .e-spinner-pane {
+            .e-spinner-inner {
+                .e-spin-material {
+                    stroke: #6cdcd4;
+                }
+            }
+        }
+        .e-calendar {
+            .e-content {
+                td.e-selected {
+                    span.e-day {
+                        background-color: #6cdcd4;
+                        border-color: #6cdcd4;
+                    }
+                    &:hover {
+                        span.e-day {
+                            background-color: #6cdcd4;
+                        }
+                    }
+                }
+                td.e-today.e-selected {
+                    span.e-day {
+                        background-color: #6cdcd4;
+                        border-color: #6cdcd4;
+                    }
+                    &:hover {
+                        span.e-day {
+                            background-color: #6cdcd4;
+                        }
+                    }
+                }
+                td.e-today {
+                    span.e-day {
+                        color: #6cdcd4;
+                        border-color: #6cdcd4;
+                    }
+                    &:hover {
+                        span.e-day {
+                            background-color: #6cdcd4;
+                            border-color: #6cdcd4;
+                            color: #fff;
+                        }
+                    }
+                }
+                td.e-selected.e-focused-date {
+                    span.e-day {
+                        background-color: #6cdcd4;
+                    }
+                }
+            }
+        }
+        .e-bigger.e-small {
+            .e-calendar {
+                .e-content {
+                    td.e-selected {
+                        span.e-day {
+                            background-color: #6cdcd4;
+                            border-color: #6cdcd4;
+                        }
+                        &:hover {
+                            span.e-day {
+                                background-color: #6cdcd4;
+                            }
+                        }
+                    }
+                    td.e-today.e-selected {
+                        span.e-day {
+                            background-color: #6cdcd4;
+                            border-color: #6cdcd4;
+                        }
+                        &:hover {
+                            span.e-day {
+                                background-color: #6cdcd4;
+                            }
+                        }
+                    }
+                    td.e-selected.e-focused-date {
+                        span.e-day {
+                            background-color: #6cdcd4;
+                        }
+                    }
+                }
+            }
+        }
+        .e-btn.e-flat.e-primary {
+            color: #6cdcd4;
+            &:hover {
+                background-color: rgba(229, 244, 248,1);
+                border-color: transparent;
+                color: #6cdcd4;
+            }
+        }
+        .e-css.e-btn.e-flat.e-primary {
+            color: #6cdcd4;
+            &:hover {
+                background-color: rgba(229, 244, 248,1);
+                border-color: transparent;
+                color: #6cdcd4;
+            }
+        }
+}
+
+
+.e-appointment.live-event {
+    animation: zoom-in-zoom-out 1s ease-out infinite;
+}
+  @-webkit-keyframes zoom-in-zoom-out {
+    0% {
+        -webkit-transform: scale(1, 1);
+    }
+    50% {
+        -webkit-transform: scale(0.92, 0.92);
+    }
+    100% {
+        -webkit-transform: scale(1, 1);
+    }
+  }
+  @-moz-keyframes zoom-in-zoom-out {
+    0% {
+        -moz-transform: scale(1, 1);
+    }
+    50% {
+        -moz-transform: scale(0.92, 0.92);
+    }
+    100% {
+        -moz-transform: scale(1, 1);
+    }
+  }
+  @-o-keyframes zoom-in-zoom-out {
+    0% {
+        -o-transform: scale(1, 1);
+    }
+    50% {
+        -o-transform: scale(0.92, 0.92);
+    }
+    100% {
+        -o-transform: scale(1, 1);
+    }
+  }
+  @keyframes zoom-in-zoom-out {
+    0% {
+    transform: scale(1, 1);
+    }
+    50% {
+    transform: scale(0.92, 0.92);
+    }
+    100% {
+    transform: scale(1, 1);
+    }
+  }

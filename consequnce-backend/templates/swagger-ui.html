@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Swagger</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="//unpkg.com/swagger-ui-dist@3/swagger-ui.css" />
+    <style>
+          #mySidenav a {
+            position: absolute;
+            left: -85px;
+            transition: 0.3s;
+            padding: 15px;
+            width: 100px;
+            text-decoration: none;
+            font-size: 20px;
+            color: white;
+            border-radius: 0 5px 5px 0;
+          }
+
+          #mySidenav a:hover {
+            left: 0;
+          }
+
+          #loginModalOpenBtn {
+            top: 20px;
+            background-color: green;
+          }
+
+          /* Modal */
+          /* The Modal (background) */
+          .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+          }
+
+          /* Modal Content/Box */
+          .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+          }
+
+          /* The Close Button */
+          .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+          }
+
+          .close:hover,
+          .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+          }
+    </style>
+  </head>
+  <body>
+    <div id="mySidenav" class="sidenav">
+      <a href="#" id="loginModalOpenBtn">Login</a>
+    </div>
+    <div id="loginModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div>
+          <label for="userID">User ID:</label><br>
+          <input type="text" id="userID" name="userID" value="likeredapple@outlook.com"><br>
+          <label for="userPwd">User Password:</label><br>
+          <input type="text" id="userPwd" name="userPwd" value="admin1216"><br><br>
+          <input type="button" id="submitLoginBtn" value="Login">
+        </div>
+      </div>
+
+    </div>
+    <div id="swagger-ui"></div>
+    <script src="//unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+    <script>
+
+      // Get the modal
+      var modal = document.getElementById("loginModal");
+
+      // Get the button that opens the modal
+      var loginModalOpenBtn = document.getElementById("loginModalOpenBtn");
+      var submitLoginBtn = document.getElementById("submitLoginBtn");
+
+      // Get the <span> element that closes the modal
+      var span = document.getElementsByClassName("close")[0];
+
+      var swagger_ui = null;
+      var access_token = localStorage.getItem("bearer_token") || "";
+      if(access_token){
+        loginModalOpenBtn.innerText = 'ReLogin';
+      }
+
+      load_open_api();
+      function load_open_api(){
+          access_token = localStorage.getItem("bearer_token") || "";
+          swagger_ui = SwaggerUIBundle({
+                url: "{% url schema_url %}",
+                dom_id: '#swagger-ui',
+                presets: [
+                  SwaggerUIBundle.presets.apis,
+                  SwaggerUIBundle.SwaggerUIStandalonePreset
+                ],
+                layout: "BaseLayout",
+                requestInterceptor: (request) => {
+                  request.headers['X-CSRFToken'] = "{{ csrf_token }}"
+                  if(access_token) request.headers['Authorization'] = `Bearer ${access_token}`
+                  return request;
+                }
+          });
+      }
+
+      // When the user clicks on the button, open the modal
+      loginModalOpenBtn.onclick = function() {
+        modal.style.display = "block";
+      }
+
+      submitLoginBtn.onclick = function() {
+          var params = {
+              "email": document.getElementById("userID").value,
+              "password": document.getElementById("userPwd").value
+          };
+          // var params = typeof data == 'string' ? data : Object.keys(data).map(
+          //     function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+          // ).join('&');
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                const result = JSON.parse(this.responseText);
+                if(result['success'] === true){
+                  localStorage.setItem("bearer_token", result['access']);
+                  // location.reload();
+                  load_open_api();
+                  loginModalOpenBtn.innerText = 'ReLogin';
+                  modal.style.display = "none";
+                }
+              }
+          };
+          xhttp.open("POST", "/api/auth/login/", true);
+          xhttp.setRequestHeader('Content-Type', 'application/json');
+          xhttp.send(JSON.stringify(params));
+      }
+
+      // When the user clicks on <span> (x), close the modal
+      span.onclick = function() {
+        modal.style.display = "none";
+      }
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

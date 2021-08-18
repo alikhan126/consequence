@@ -1,0 +1,12 @@
+{
+  "dashboard": "Dashboard",
+  "home": "Home",
+  "users": "Users",
+  "patients": "Patients",
+  "dashboardItems": {
+    "versionOne": "Version One",
+    "versionTwo": "Version Two",
+    "versionThree": "Version Three",
+    "versionFour": "Version Four"
+  }
+}

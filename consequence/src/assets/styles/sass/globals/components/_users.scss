@@ -1,0 +1,17 @@
+.dark-theme {
+    .list-group-item-action {
+        color: #d8d8d8;
+    }
+    .ul-contact-list button {
+            color: #d8d8d8;
+            border: 1px solid #d8d8d8;
+        }
+        .ul-contact-list {
+            .list-group-flush button {
+                border: 1px solid #d8d8d861;
+                border-right: 0;
+                border-left: 0;
+                border-radius: 0;
+        }
+    }
+}
