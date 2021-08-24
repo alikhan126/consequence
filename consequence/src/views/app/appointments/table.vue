@@ -91,20 +91,20 @@ export default {
       moment,
       columns: [
         {
+          label: "Account ID",
+          field: "account_id",
+        },
+        {
+          label: "Account Type",
+          field: "account_type",
+        },
+        {
           label: "Name",
-          field: "name",
+          field: "display_name",
         },
         {
-          label: "Phone",
-          field: "phone",
-        },
-        {
-          label: "City",
-          field: "city",
-        },
-        {
-          label: "Actions",
-          field: "action",
+          label: "Currency",
+          field: "currency",
         },
       ],
       rows: [

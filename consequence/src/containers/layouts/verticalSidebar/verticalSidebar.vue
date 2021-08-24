@@ -172,16 +172,10 @@ export default {
       selectedParentMenu: "",
       sideMenu: [
         {
-          title: "Bank Accounts",
+          title: "Welcome",
           selectedParentMenu: "appointments",
           icon: "i-File-Horizontal-Text",
-          redirectTo: "/app/appointments",
-        },
-        {
-          title: "Cards",
-          selectedParentMenu: "appointments",
-          icon: "i-File-Horizontal-Text",
-          redirectTo: "/app/appointments",
+          redirectTo: "/app/overview",
         },
       ],
     };

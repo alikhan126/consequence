@@ -58,7 +58,7 @@ const routes = [
     name: "HomePageDashboard",
     component: AppView,
     beforeEnter: authenticate,
-    redirect: "./app/appointments",
+    redirect: "./app/overview",
     children: [
       {
         path: "/app/appointments",
