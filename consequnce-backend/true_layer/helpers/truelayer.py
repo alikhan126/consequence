@@ -24,8 +24,8 @@ class TrueLayerAPI:
 		self.url = settings.TRUELAYER_AUTH_URI
 		self.auth_url = f"{self.url}connect/token"
 		self.data_api_uri = f"{self.url}data/v1"
-		self.scope = "info cards accounts transactions balance offline_access direct_debits standing_orders products beneficiaries"
 		self.access_token = None
+		self.scope = "info accounts balance cards transactions direct_debits standing_orders offline_access"
 		self.refresh_token = None
 		self.credentials_id = None
 		self.expiration_date = None
@@ -38,16 +38,18 @@ class TrueLayerAPI:
 				"client_id": self.client_id,
 				# List of permissions https://docs.truelayer.com/#permissions
 				"scope": self.scope,
-				"nonce": int(time.time()),
+				# "nonce": int(time.time()),
 				"redirect_uri": self.redirect_uri,
-				"enable_mock": "true",
-				"enable_open_banking_providers": "true",
-				"enable_credentials_sharing_providers": "false",
-				"state": state
+				"state": state,
+				"providers": "uk-ob-all uk-oauth-all",
+				# TODO: In order to test in sandbox uncomment following.
+				# "enable_mock": "true",
+				# "enable_open_banking_providers": "true",
+				# "enable_credentials_sharing_providers": "false",
 			}
 		)
 
-		auth_uri = f"https://auth.truelayer-sandbox.com/?{query_param}"
+		auth_uri = f"{self.url}?{query_param}"
 		return auth_uri
 
 	def from_code(self, code: str) -> None:
@@ -135,14 +137,17 @@ class TrueLayerDataAPI:
 		super().__init__()
 
 	def __save_account(sefl, user, result):
+		account_number = result['account_number']
+		acc_number = account_number['number'] if account_number.get('number') else account_number['iban'] if account_number.get('iban') else ""
+
 		payload = {
 			"account_id": result['account_id'],
 			"account_type": result['account_type'],
 			"display_name": result['display_name'],
 			"currency": result['currency'],
 			"account_swift_bic": result['account_number']['swift_bic'],
-			"account_number": result['account_number']['number'],
-			"account_sort_code": result['account_number']['sort_code'],
+			"account_number": acc_number,
+			"account_sort_code": account_number['sort_code'] if account_number.get('sort_code') else "",
 			"provider_display_name": result['provider']['display_name'],
 			"provider_id": result['provider']['provider_id'],
 			"provider_logo_uri": result['provider']['logo_uri'],

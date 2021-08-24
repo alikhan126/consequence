@@ -1,14 +1,34 @@
 import time
 from django.conf import settings
 
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from true_layer.helpers.truelayer import TrueLayerAPI, TrueLayerDataAPI
-from true_layer.models import TrueLayerAuth, Account
+from true_layer.models import TrueLayerAuth, Account, Card
+from true_layer.api.serializers import AccountSerializer, CardSerializer
 from user.models import User
+
+
+class TrueLayerCardsViewset(viewsets.ModelViewSet):
+    """
+    Viewset to create, list, update and delete VideoRoom.
+    """
+    queryset = Card.objects.all()
+    serializer_class = CardSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+
+class TrueLayerAccountsViewset(viewsets.ModelViewSet):
+    """
+    Viewset to list accounts
+    """
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class TrueLayerAuthView(APIView):

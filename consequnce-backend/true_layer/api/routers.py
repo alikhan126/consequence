@@ -10,10 +10,14 @@ from true_layer.api.viewsets import (
     TrueLayerTransactions,
     TrueLayerBalance,
     TrueLayerCards,
-    TrueLayerCardTransactions
+    TrueLayerCardTransactions,
+    TrueLayerCardsViewset,
+    TrueLayerAccountsViewset,
 )
 
 router = routers.SimpleRouter()
+router.register(r"true-layer/accounts", TrueLayerAccountsViewset, basename="accounts")
+router.register(r"true-layer/cards", TrueLayerCardsViewset, basename="cards")
 
 urlpatterns = [
     url(r'', include(router.urls)),
